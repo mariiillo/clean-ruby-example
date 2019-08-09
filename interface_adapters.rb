@@ -2,7 +2,7 @@ require_relative "use_cases"
 
 class Controller
   def call(params, presenter, callbacks)
-    @repository = MemoryRepository.new
+    @repository = Container[:repository]
     @response = Interactor.new(params, @repository, presenter).call
     if @response.success?
       callbacks[:success].call

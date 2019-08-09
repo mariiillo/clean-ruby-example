@@ -1,4 +1,5 @@
 require "roda"
+require_relative "system"
 require_relative "interface_adapters"
 
 class App < Roda
