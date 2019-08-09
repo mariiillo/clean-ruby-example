@@ -1,5 +1,5 @@
 require "roda"
-require_relative "interface_adapters.rb"
+require_relative "interface_adapters"
 
 class App < Roda
   plugin :render
