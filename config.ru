@@ -1,5 +1,6 @@
 require "roda"
 
+# Framework
 class App < Roda
   route do |r|
     r.root do
@@ -61,6 +62,7 @@ class Interactor
   end
 end
 
+# Entities (value objects)
 class Success
   def success?
     true
