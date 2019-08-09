@@ -35,7 +35,15 @@ class Controller
   end
 end
 
-class Presenter; end
+class Presenter
+  def initialize(message)
+    @message = message
+  end
+
+  def show_message
+    @message
+  end
+end
 
 # Use cases
 class Interactor
