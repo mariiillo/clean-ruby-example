@@ -1,3 +1,4 @@
+require "securerandom"
 require_relative "entities"
 
 class Interactor
@@ -11,12 +12,14 @@ class Interactor
     end
   end
 
-  def initialize(params)
+  def initialize(params, repository)
     @form = Form.new(params)
+    @repository = repository
   end
 
   def call
     if @form.valid?
+      @repository.set(:age, (1..20).to_a.sample)
       Success.new
     else
       Failure.new

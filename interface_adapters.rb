@@ -2,7 +2,8 @@ require_relative "use_cases"
 
 class Controller
   def call(params, callbacks)
-    @interactor = Interactor.new(params).call
+    repository = MemoryRepository.new
+    @interactor = Interactor.new(params, repository).call
     if @interactor.success?
       callbacks[:success].call
     else
@@ -18,5 +19,19 @@ class Presenter
 
   def show_message
     @message
+  end
+end
+
+class MemoryRepository
+  def initialize
+    @map ||= {}
+  end
+
+  def set(key, value)
+    @map[key] = value
+  end
+
+  def get(key)
+    @map[key]
   end
 end
