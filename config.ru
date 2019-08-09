@@ -2,21 +2,17 @@ require "roda"
 require_relative "interface_adapters.rb"
 
 class App < Roda
+  plugin :render
+
   route do |r|
     r.root do
+      @presenter = Presenter.new
       Controller.new.call(
         r.params,
-        success: -> { r.redirect "green_way" },
-        failure: -> { r.redirect "red_way" }
+        @presenter,
+        success: -> { render "green_way" },
+        failure: -> { render "red_way" }
       )
-    end
-
-    r.get "green_way" do
-      "YOU DID IT!"
-    end
-
-    r.get "red_way" do
-      "GO HOME, YOU ARE DRUNK!"
     end
   end
 end

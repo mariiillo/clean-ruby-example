@@ -21,7 +21,7 @@ class Interactor
   def call
     if @form.valid?
       @repository.set(:age, (1..20).to_a.sample)
-      @presenter.set_age(@repository[:age])
+      @presenter.set_age(@repository.get(:age))
       Success.new
     else
       Failure.new
