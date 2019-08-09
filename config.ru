@@ -3,7 +3,7 @@ require "roda"
 class App < Roda
   route do |r|
     r.root do
-      @interactor = Interactor.new(FormObject.new(r.params), Presenter.new).call
+      @interactor = Interactor.new(r.params, Presenter.new).call
       if @interactor.success?
         r.redirect "green_way"
       else
@@ -23,21 +23,21 @@ end
 
 run App.freeze.app
 
-class FormObject
-  def initialize(params)
-    @params = params
-  end
-
-  def valid?
-    [true, false].sample
-  end
-end
-
 class Presenter; end
 
 class Interactor
-  def initialize(form, presenter)
-    @form = form
+  class Form
+    def initialize(params)
+      @params = params
+    end
+
+    def valid?
+      [true, false].sample
+    end
+  end
+
+  def initialize(params, presenter)
+    @form = Form.new(params)
     @presenter = presenter
   end
 
