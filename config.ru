@@ -1,6 +1,6 @@
 require "roda"
+require_relative "interface_adapters.rb"
 
-# Framework
 class App < Roda
   route do |r|
     r.root do
@@ -22,63 +22,3 @@ class App < Roda
 end
 
 run App.freeze.app
-
-# Interface adapters
-class Controller
-  def call(params, callbacks)
-    @interactor = Interactor.new(params).call
-    if @interactor.success?
-      callbacks[:success].call
-    else
-      callbacks[:failure].call
-    end
-  end
-end
-
-class Presenter
-  def initialize(message)
-    @message = message
-  end
-
-  def show_message
-    @message
-  end
-end
-
-# Use cases
-class Interactor
-  class Form
-    def initialize(params)
-      @params = params
-    end
-
-    def valid?
-      [true, false].sample
-    end
-  end
-
-  def initialize(params)
-    @form = Form.new(params)
-  end
-
-  def call
-    if @form.valid?
-      Success.new
-    else
-      Failure.new
-    end
-  end
-end
-
-# Entities (value objects)
-class Success
-  def success?
-    true
-  end
-end
-
-class Failure
-  def success?
-    false
-  end
-end
