@@ -2,8 +2,9 @@ require_relative "use_cases"
 
 class Controller
   def call(params, callbacks)
-    repository = MemoryRepository.new
-    @interactor = Interactor.new(params, repository).call
+    @repository = MemoryRepository.new
+    @presenter = Presenter.new
+    @interactor = Interactor.new(params, repository, presenter).call
     if @interactor.success?
       callbacks[:success].call
     else
@@ -13,12 +14,12 @@ class Controller
 end
 
 class Presenter
-  def initialize(message)
-    @message = message
+  def set_age(age)
+    @age = age
   end
 
   def show_message
-    @message
+    "I'm #{@age} years old"
   end
 end
 
