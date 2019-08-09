@@ -3,12 +3,11 @@ require "roda"
 class App < Roda
   route do |r|
     r.root do
-      @interactor = Interactor.new(r.params, Presenter.new).call
-      if @interactor.success?
-        r.redirect "green_way"
-      else
-        r.redirect "red_way"
-      end
+      Controller.new.call(
+        r.params,
+        success: -> { r.redirect "green_way" },
+        failure: -> { r.redirect "red_way" }
+      )
     end
 
     r.get "green_way" do
@@ -23,8 +22,21 @@ end
 
 run App.freeze.app
 
+# Interface adapters
+class Controller
+  def call(params, callbacks)
+    @interactor = Interactor.new(params).call
+    if @interactor.success?
+      callbacks[:success].call
+    else
+      callbacks[:failure].call
+    end
+  end
+end
+
 class Presenter; end
 
+# Use cases
 class Interactor
   class Form
     def initialize(params)
@@ -36,19 +48,15 @@ class Interactor
     end
   end
 
-  def initialize(params, presenter)
+  def initialize(params)
     @form = Form.new(params)
-    @presenter = presenter
   end
 
   def call
     if @form.valid?
-      sleep 0.1
       Success.new
-      self
     else
       Failure.new
-      self
     end
   end
 end
@@ -56,13 +64,11 @@ end
 class Success
   def success?
     true
-    self
   end
 end
 
 class Failure
   def success?
     false
-    self
   end
 end
